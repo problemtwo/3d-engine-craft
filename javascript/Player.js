@@ -7,20 +7,22 @@ class Player extends NPC {
         this.jumpSpeed = controls.jumpSpeed;
         this.lookSpeed = controls.lookSpeed;
         this.lat = 0;
-        this.lon = 0;
+        this.lon = 90; // The player starts looking horizontally.
         this.theta = 0;
         this.phi = 0;
         this.maxCraneAngle = 89; // The highest degree the player can look up at.
-        this.justCollided = false;
+        this.spawnPoint = pos.clone(); // Where the player will respawn if they fall out of the world.
     }
 
     updateControls() {
         // Update position.
-        if (Keys.space && this.justCollided) this.vel.y += this.jumpSpeed * GC.delta;
-        if (Keys.w) this.vel.shift( Vector3D.FromSpherical(PI/2, this.phi, this.speed * this.GC.delta) );
-        if (Keys.s) this.vel.shift( Vector3D.FromSpherical(PI/2, this.phi, -this.speed * this.GC.delta) ); 
-        if (Keys.a) this.vel.shift( Vector3D.FromSpherical(PI/2, this.phi, this.speed * this.GC.delta).getRotated(PI/2, UP) );
-        if (Keys.d) this.vel.shift( Vector3D.FromSpherical(PI/2, this.phi, -this.speed * this.GC.delta).getRotated(PI/2, UP) ); 
+        if (this.justCollided) { // The player can't move if they aren't touching ground.
+            if (Keys.space) this.vel.y += this.jumpSpeed * GC.delta;
+            if (Keys.w) this.vel.shift( Vector3D.FromSpherical(PI/2, this.phi, this.speed * this.GC.delta) );
+            if (Keys.s) this.vel.shift( Vector3D.FromSpherical(PI/2, this.phi, -this.speed * this.GC.delta) ); 
+            if (Keys.a) this.vel.shift( Vector3D.FromSpherical(PI/2, this.phi, this.speed * this.GC.delta).getRotated(PI/2, UP) );
+            if (Keys.d) this.vel.shift( Vector3D.FromSpherical(PI/2, this.phi, -this.speed * this.GC.delta).getRotated(PI/2, UP) ); 
+        }
         // Update orientation.
         this.lat -= (Mouse.x - Mouse.px) * this.lookSpeed * GC.delta;
         this.lon += (Mouse.y - Mouse.py) * this.lookSpeed * GC.delta;
@@ -36,18 +38,18 @@ class Player extends NPC {
         // Update orientation.
         var target = this.pos.getShifted(Vector3D.FromSpherical(this.theta, this.phi, 1));
         camera.lookAt(target.x, target.y, target.z);
+        // Update FOV.
+        camera.fov = 90 * (0.7 + 0.10 / (1 + Math.exp(-0.1 * (this.vel.x**2 + this.vel.z**2) - 1)));
+        camera.updateProjectionMatrix();
     }
     
     physics() {
         this.updateControls();
 
-        this.vel.y += PHYSICS.GRAVITY * GC.delta;
-        this.vel.x *= PHYSICS.FRICTION;
-        this.vel.z *= PHYSICS.FRICTION;
-        this.vel.y *= PHYSICS.AIR_RESISTANCE;
-        this.pos.shift(this.vel.getScaled(GC.delta));
-        this.justCollided = false;
-        this.justCollided = this.GC.checkCollision(this);
+        super.physics();
+        if (this.pos.y < PHYSICS.OUT_OF_WORLD) {
+            this.pos = this.spawnPoint.clone();
+        }
 
         this.updateCamera();
     }

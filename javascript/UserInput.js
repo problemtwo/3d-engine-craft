@@ -30,6 +30,7 @@ window.onkeyup = function(e) {
 };
 document.onmouseup = function(e) {
     Mouse["click"] = true;
+		// https://stackoverflow.com/questions/7984471/how-to-get-clicked-element-in-three-js
 };
 function mousemove(e) {
     Mouse.x += e.movementX;
