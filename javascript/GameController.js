@@ -4,8 +4,8 @@ class GameController {
     this.ThreeScene = ThreeScene; // The scene object from Three.js
     this.ThreeCamera = ThreeCamera; // The camara object from Three.js
     this.player = new Player(this, new Vector3D(40, 4, 0), new Vector3D(0.5, 2, 0.5), "0x00ff00", "", {
-        "speed": 10*3,
-        "jumpSpeed": 300,
+        "speed": 20,
+        "jumpSpeed": 320,
         "lookSpeed": 15
     });
     this.scenes = [
@@ -256,6 +256,9 @@ class GameController {
     // Store a clock for physics calculations.
     this.clock = new THREE.Clock();
     this.delta;
+    this.maxStep = (1/10) * 1000; // The biggest timestep allowed. When the game lags,
+    // it will take many steps of this size once it recovers instead of one huge step.
+    this.maxFrames = 10; // The most frames it will attempt to recover in one frame.
   }
   
   get scene() {
@@ -300,18 +303,27 @@ class GameController {
     }
   }
 
+  integrate() {
+      var npc;
+      for (var i in this.scene.npcs) {
+          npc = this.scene.npcs[i];
+          npc.update();
+      }
+      var obj;
+      for (var i in this.scene.objects) {
+          obj = this.scene.objects[i];
+          obj.update();
+      }
+  }
+
   update() {
-    this.delta = this.clock.getDelta();
-    this.player.update();
-    var npc;
-    for (var i in this.scene.npcs) {
-      npc = this.scene.npcs[i];
-      npc.update();
-    }
-    var obj;
-    for (var i in this.scene.objects) {
-      obj = this.scene.objects[i];
-      obj.update();
+    var frameTime = this.clock.getDelta(), frames = 0;
+    
+    while (frameTime > 0 && frames < this.maxFrames) {
+        this.delta = Math.min(frameTime, this.maxStep);
+        this.integrate();
+        frameTime -= this.delta;
+        frames++;
     }
   }
   
