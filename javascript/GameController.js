@@ -216,7 +216,7 @@ class GameController {
 				var row = 1.8*i - 2, col = 1.5*j - 6.6;
 				var path = randomPath();
 				var displ = (path === 'models/Parris.glb') ? new Vector3D(0,0,0) : new Vector3D(0.5,0,-0.5);
-				this.scenes[0].npcs.push(new NPC(this,new Vector3D(row, 3, col),new Vector3D(0.2,2.1,0.2),"",path,true,'glb',true,0,displ, (obj) => { 
+				this.scenes[0].npcs.push(new NPC(this,new Vector3D(row, 4, col),new Vector3D(0.2,2.1,0.2),"",path,true,'glb',true,0,displ, (obj) => { 
 							if (!obj.collisionBox.playAnimation) {
 								obj.collisionBox.playAnimation = Math.random() < 0.01; 
 								obj.collisionBox.animationCounter = 0;
@@ -232,7 +232,7 @@ class GameController {
 							}
 							obj.collisionBox.animation.paused = !obj.collisionBox.playAnimation;
 				} ));
-				this.scenes[1].npcs.push(new NPC(this,new Vector3D(row+40, 3, col),new Vector3D(0.2,2.1,0.2),"",path,true,'glb',true,0,displ, (obj) => { 
+				this.scenes[1].npcs.push(new NPC(this,new Vector3D(row+40, 4, col),new Vector3D(0.2,2.1,0.2),"",path,true,'glb',true,0,displ, (obj) => { 
 							if (!obj.collisionBox.playAnimation) {
 								obj.collisionBox.playAnimation = Math.random() < 0.01; 
 								obj.collisionBox.animationCounter = 0;
