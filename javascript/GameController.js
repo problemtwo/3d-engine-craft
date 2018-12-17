@@ -3,7 +3,7 @@ class GameController {
   constructor(ThreeScene, ThreeCamera) {
     this.ThreeScene = ThreeScene; // The scene object from Three.js
     this.ThreeCamera = ThreeCamera; // The camara object from Three.js
-    this.player = new Player(this, new Vector3D(40, 3, 0), new Vector3D(0.5, 2, 0.5), "0x00ff00", "", {
+    this.player = new Player(this, new Vector3D(40, 4, 0), new Vector3D(0.5, 2, 0.5), "0x00ff00", "", {
         "speed": 10*3,
         "jumpSpeed": 300,
         "lookSpeed": 15
