@@ -3,9 +3,9 @@ class GameController {
   constructor(ThreeScene, ThreeCamera) {
     this.ThreeScene = ThreeScene; // The scene object from Three.js
     this.ThreeCamera = ThreeCamera; // The camara object from Three.js
-    this.player = new Player(this, new Vector3D(40, 6, 0), new Vector3D(0.5, 2, 0.5), "0x00ff00", "", {
-        "speed": 20,
-        "jumpSpeed": 320,
+    this.player = new Player(this, new Vector3D(40, 4, 0), new Vector3D(0.5, 2, 0.5), "0x00ff00", "", {
+        "speed": 30,
+        "jumpSpeed": 620,
         "lookSpeed": 15
     });
     this.scenes = [
@@ -258,7 +258,7 @@ class GameController {
     this.delta;
     this.maxStep = (1/10) * 1000; // The biggest timestep allowed. When the game lags,
     // it will take many steps of this size once it recovers instead of one huge step.
-    this.maxFrames = 10; // The most frames it will attempt to recover in one frame.
+    this.maxFrames = 100; // The most frames it will attempt to recover in one frame.
   }
   
   get scene() {
