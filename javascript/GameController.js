@@ -256,7 +256,7 @@ class GameController {
     // Store a clock for physics calculations.
     this.clock = new THREE.Clock();
     this.delta;
-    this.maxStep = (1/10) * 1000; // The biggest timestep allowed. When the game lags,
+    this.maxStep = (1/20) * 1000; // The biggest timestep allowed. When the game lags,
     // it will take many steps of this size once it recovers instead of one huge step.
     this.maxFrames = 100; // The most frames it will attempt to recover in one frame.
   }
